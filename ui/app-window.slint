@@ -1,0 +1,189 @@
+import { Button, VerticalBox } from "std-widgets.slint";
+import { Logo } from "components/logo.slint";
+import { FavList } from "components/fav-list.slint";
+import { User } from "components/user.slint";
+
+export component AppWindow inherits Window {
+    no-frame: true;
+    width: 800px;
+    height: 580px;
+
+
+    property <bool> drag-area-pressed: false;
+    property <length> drag-area-down-x: 0;
+    property <length> drag-area-down-y: 0;
+
+    callback move-window(length, length);
+    // in-out property <int> counter: 0;
+    // callback request-increase-value();
+
+
+
+    function process_move_event(i: int, ev: PointerEvent, is_pressed: bool, x: length, y: length) {
+        if ev.kind == PointerEventKind.down {
+            drag-area-down-x = x;
+            drag-area-down-y = y;
+            drag-area-pressed = true;
+        } else if ev.kind == PointerEventKind.up {
+            drag-area-down-x = x;
+            drag-area-down-y = y;
+            drag-area-pressed = false;
+        } else if ev.kind == PointerEventKind.move && is_pressed {
+            move-window(x - drag-area-down-x, y - drag-area-down-y);
+        }
+    }
+
+    Rectangle {
+        width: parent.width;
+        height: parent.height;
+        border-width: 1px;
+        border-color: #ccc;
+
+        VerticalLayout {
+            // width: 799px;
+            // height: 579px;
+            spacing: 0px;
+
+            HorizontalLayout {
+                width: parent.width;
+                height: 519px;
+                
+
+                // left
+                VerticalLayout {
+                    width: 199px;
+                    height: parent.height;
+                    spacing: 0px;
+                    
+                    Rectangle {
+                        TouchArea {
+                            // window move area
+                            pointer-event(ev) => {
+                                process_move_event(0, ev, self.pressed, self.mouse-x, self.mouse-y);
+                            }
+                        }
+
+                        // logo
+                        width: parent.width;
+                        height: 84px;
+
+                        Logo {
+                            width: parent.width;
+                            height: parent.height;
+                        }
+                    }
+
+                    Rectangle {
+                        // fav list
+                        width: parent.width;
+                        height: 365px;
+
+                        FavList {
+                            width: parent.width;
+                            height: parent.height;
+                        }
+                    }
+
+                    Rectangle {
+                        // divider
+                        width: parent.width;
+                        height: 1px;
+                        background: #e4e4e7;
+                    }
+
+                    Rectangle {
+                        // user
+                        width: parent.width;
+                        height: 69px;
+
+                        User{
+                            
+                        }
+                    }
+                }
+                
+                
+                Rectangle {
+                    // divider
+                    width: 1px;
+                    height: parent.height;
+                    background: #e4e4e7;
+                }
+
+                VerticalLayout {
+                    y: 1px;
+                    width: 600px;
+                    height: parent.height;
+                    spacing: 0px;
+
+                    Rectangle {
+                        TouchArea {
+                            // window move area
+                            pointer-event(ev) => {
+                                process_move_event(0, ev, self.pressed, self.mouse-x, self.mouse-y);
+                            }
+                        }
+
+                        // title
+                        width: 599px;
+                        height: 48px;
+                        background: white;
+                        Text {
+                            text: "title";
+                        }
+                    }
+
+                    Rectangle {
+                        // divider
+                        width: parent.width;
+                        height: 1px;
+                        background: #e4e4e750;
+                    }
+
+                    Rectangle {
+                        // main
+                        width: 599px;
+                        background: white;
+                        Text {
+                            text: "main";
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                // divider
+                width: parent.width;
+                height: 1px;
+                background: #e4e4e7;
+            }
+
+            Rectangle {
+                // bottom
+                width: 798px;
+                height: 59px;
+                x: 1px;
+                background: white;
+                Text {
+                    text: "bottom";
+                }
+            }
+        }
+    }
+
+    
+    // VerticalLayout {
+    //     width: 199px;
+        
+    //     Text {
+    //         text: "Counter: \{root.counter}";
+    //     }
+
+    //     Button {
+    //         text: "Increase value";
+    //         clicked => {
+    //             root.request-increase-value();
+    //         }
+    //     }
+    // }
+}

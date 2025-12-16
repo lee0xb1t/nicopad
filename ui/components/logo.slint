@@ -1,0 +1,76 @@
+export component Logo inherits Rectangle {
+    HorizontalLayout {
+        width: parent.width;
+        height: parent.height;
+        spacing: 0px;
+        alignment: start;
+        padding-left: 25px;
+
+        VerticalLayout{
+            alignment: center;
+            logo_ico := Rectangle {
+                in-out property <bool> is_animate: false;
+
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                background: #fb7185;
+
+                drop-shadow-blur: 15px;
+                drop-shadow-color: #fecdd3;
+
+                Text {
+                    font-weight: 800;
+                    font-size: 13px;
+                    color: white;
+                    text: "N";
+                }
+                
+                area := TouchArea {
+                    width: parent.width;
+                    height: parent.height;
+                    mouse-cursor: pointer;
+                }
+
+                states [
+                    shadow1 when area.has-hover: {
+                        logo_ico.drop-shadow-blur: 15px;
+                        logo_ico.drop-shadow-color: #fb7185;
+                        in {
+                            animate logo_ico.drop-shadow-blur { duration: 500ms; delay: 0; }
+                            animate logo_ico.drop-shadow-color { duration: 500ms; delay: 0; }
+                        }
+                    }
+
+                    shadow2 when !area.has-hover: {
+                        logo_ico.drop-shadow-blur: 15px;
+                        logo_ico.drop-shadow-color: #fecdd3;
+                        in {
+                            animate logo_ico.drop-shadow-blur { duration: 200ms; delay: 0; }
+                            animate logo_ico.drop-shadow-color { duration: 200ms; delay: 0; }
+                        }
+                    }
+                ]
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+            padding-left: 10px;
+            padding-top: 4px;
+            Rectangle {
+                width: 85px;
+                height: 24px;
+
+                Text {
+                    font-weight: 600;
+                    font-size: 12pt;
+                    color: black;
+                    letter-spacing: 2px;
+                    text: "NICOPAD";
+                }
+            }
+        }
+    }
+    
+}

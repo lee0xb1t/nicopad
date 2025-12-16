@@ -1,0 +1,110 @@
+export component User inherits Rectangle {
+    HorizontalLayout {
+        width: parent.width;
+        height: parent.height;
+        spacing: 0px;
+        alignment: space-between;
+        padding-left: 10px;
+
+        HorizontalLayout {
+            VerticalLayout{
+                alignment: center;
+                Rectangle {
+                    in-out property <bool> is_animate: false;
+
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 6px;
+                    background: #fb7185;
+
+                    Text {
+                        font-weight: 800;
+                        font-size: 13px;
+                        color: white;
+                        text: "";
+                    }
+                    
+                    profile_area := TouchArea {
+                        width: parent.width;
+                        height: parent.height;
+                        mouse-cursor: pointer;
+                    }
+                }
+            }
+
+            VerticalLayout {
+                alignment: center;
+                padding-left: 10px;
+                padding-top: 2px;
+                Rectangle {
+                    // width: 85px;
+                    height: 24px;
+
+                    Text {
+                        font-size: 10pt;
+                        color: black;
+                        text: "Chen";
+                    }
+
+                    name_area := TouchArea {
+                        width: parent.width;
+                        height: parent.height;
+                        mouse-cursor: pointer;
+                    }
+                }
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+            // padding-left: 10px;
+            padding-top: 4px;
+            padding-right: 10px;
+            vip := Rectangle {
+                width: 40px;
+                height: 20px;
+                border-width: 1px;
+                border-color: #aaaab2;
+                border-radius: 10px;
+                background: #f4f4f5;
+
+                drop-shadow-blur: 5px;
+                drop-shadow-color: #aaaab260;
+
+                vip_text := Text {
+                    height: 11px;
+                    font-weight: 600;
+                    font-size: 9pt;
+                    color: #aaaab2;
+                    text: "VIP";
+                }
+                    
+                vip_area := TouchArea {
+                    width: parent.width;
+                    height: parent.height;
+                    mouse-cursor: pointer;
+                }
+
+                states [
+                    vip_hover1 when vip_area.has-hover: {
+                        vip.width: 41px;
+                        vip.height: 21px;
+                        in {
+                            animate vip.width { duration: 100ms; delay: 0; }
+                            animate vip.height { duration: 100ms; delay: 0; }
+                        }
+                    }
+                    vip_hover2 when !vip_area.has-hover: {
+                        vip.width: 40px;
+                        vip.height: 20px;
+                        in {
+                            animate vip.width { duration: 100ms; delay: 0; }
+                            animate vip.height { duration: 100ms; delay: 0; }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+    
+}

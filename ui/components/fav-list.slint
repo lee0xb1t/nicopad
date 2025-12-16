@@ -1,0 +1,177 @@
+import { VerticalBox, ListView } from "std-widgets.slint";
+component FavIcon inherits Path {
+    viewbox-x: 0;
+    viewbox-y: 0;
+    viewbox-width: 24;
+    viewbox-height: 24;
+    stroke: black;
+    stroke-width: 1.5px;
+    // fill: none;
+    commands: "M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3";
+}
+
+component ListIcon inherits Rectangle {
+    in property <brush> icolor;
+    VerticalLayout {
+        alignment: center;
+        Rectangle {
+            width: 5px;
+            height: 5px;
+            border-radius: 10px;
+            //background: #71717A;
+            background: icolor;
+        }
+    }
+}
+
+component DataContainer inherits VerticalBox {
+    padding-left: 20px;
+    padding-top: 10px;
+    spacing: 0px;
+}
+
+component FavEntry inherits Rectangle {
+    in-out property <int> index: 0;
+    in-out property <bool> is_choice: false;
+    callback entry_click();
+
+    // remote info
+    in property <string> fav_id;
+    in property <string> entry_text: "Audio playlist | TOP 100 Hachimi music";
+    
+
+    width: 155px;
+    height: 32px;
+    border-width: 1px;
+    border-radius: 8px;
+    background: #fafafa;
+    border-color: #fafafa;
+    HorizontalLayout {
+        padding: 5px;
+        spacing: 7px;
+        alignment: start;
+        padding-left: 10px;
+        
+        icon := ListIcon {
+            icolor: #8a8a9260;
+        }
+
+        Rectangle {
+            dtext := Text {
+                color: #71717a;
+                font-weight: 600;
+                font-size: 9pt;
+                letter-spacing: 0.6px;
+                text: entry_text;
+            }
+        }
+    }
+
+    area := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            entry_click();
+        }
+    }
+
+    states [ 
+        hover when !is_choice && area.has-hover: {
+            icon.icolor: #4e4e55;
+            background: #18181B10;
+            in {
+                animate icon.icolor { duration: 100ms; delay: 0ms; }
+                animate background { duration: 100ms; delay: 0ms; }
+            }
+        }
+        hover1 when is_choice && area.has-hover: {
+            dtext.color: #fb7185ff;
+            icon.icolor: #fb7185ff;
+            background: #fff;
+            border-color: #E4E4E7;
+            in {
+                animate dtext.color { duration: 100ms; delay: 0ms; }
+                animate icon.icolor { duration: 100ms; delay: 0ms; }
+                animate background { duration: 100ms; delay: 0ms; }
+                animate border-color { duration: 100ms; delay: 0ms; }
+            }
+        }
+        hover2 when area.has-hover: {
+            background: #18181B10;
+            in {
+                animate background { duration: 100ms; delay: 0ms; }
+            }
+        }
+        is_choice1 when is_choice: {
+            dtext.color: #fb7185ff;
+            icon.icolor: #fb7185ff;
+            background: #fff;
+            border-color: #E4E4E7;
+            in {
+                animate dtext.color { duration: 100ms; delay: 0ms; }
+                animate icon.icolor { duration: 100ms; delay: 0ms; }
+                animate background { duration: 100ms; delay: 0ms; }
+                animate border-color { duration: 100ms; delay: 0ms; }
+            }
+        }
+    ]
+}
+
+
+export component FavList inherits Rectangle {
+    
+    VerticalBox {
+        width: parent.width;
+        height: parent.height;
+        spacing: 0px;
+        alignment: start;
+
+        Rectangle {
+            width: 159px;
+            height: 15px;
+
+            HorizontalLayout {
+                spacing: 7px;
+                alignment: start;
+                padding-left: 25px;
+                
+                FavIcon {
+                    width: 13px;
+                    height: 13px;
+                    stroke: #a1a1b2;
+                }
+
+                Rectangle {
+                    Text {
+                        color: #a1a1b2;
+                        font-weight: 800;
+                        font-size: 12px;
+                        text: "LIBRARY";
+                    }
+                }
+            }
+        }
+        
+        DataContainer {
+            in-out property <int> choice_idx: 0;
+            
+            ListView {
+                height: 310px;
+                vertical-scrollbar-policy: always-off;
+                
+                for data in 100  : FavEntry {
+                index: data;
+                is_choice: choice_idx == self.index;
+                entry_click => {
+                    choice_idx = self.index;
+                    debug(self.index);
+                }
+            }
+            }
+        }
+
+    }
+    
+}
