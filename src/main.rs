@@ -18,13 +18,28 @@ fn main() -> Result<(), Box<dyn Error>> {
     //     }
     // });
 
-    // let handel = main.as_weak();
     ui.on_move_window({
         let h = ui.as_weak();
         move |offset_x, offset_y|{
             let ui = h.unwrap();
             let logical_pos = ui.window().position().to_logical(ui.window().scale_factor());
             ui.window().set_position(LogicalPosition::new(logical_pos.x + offset_x, logical_pos.y + offset_y));
+        }
+    });
+
+    ui.on_minium_clicked({
+        let h = ui.as_weak();
+        move ||{
+            let ui = h.unwrap();
+            ui.window().set_minimized(true);
+        }
+    });
+
+    ui.on_close_clicked({
+        let h = ui.as_weak();
+        move ||{
+            let ui = h.unwrap();
+            ui.hide().unwrap();
         }
     });
 

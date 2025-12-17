@@ -1,0 +1,169 @@
+component MiniumButton inherits Path {
+    viewbox-x: 0;
+    viewbox-y: 0;
+    viewbox-width: 24;
+    viewbox-height: 24;
+    stroke: black;
+    stroke-width: 1.5px;
+    // fill: none;
+    commands: "M5 12h14";
+}
+
+component MaxiumButton inherits Path {
+    viewbox-x: 0;
+    viewbox-y: 0;
+    viewbox-width: 24;
+    viewbox-height: 24;
+    stroke: black;
+    stroke-width: 1.5px;
+    // fill: none;
+    commands: "M5,3 h14 a2,2 0 0,1 2,2 v14 a2,2 0 0,1 -2,2 h-14 a2,2 0 0,1 -2,-2 v-14 a2,2 0 0,1 2,-2 z";
+}
+
+component CloseButton1 inherits Path {
+    viewbox-x: 0;
+    viewbox-y: 0;
+    viewbox-width: 24;
+    viewbox-height: 24;
+    stroke: black;
+    stroke-width: 1.5px;
+    // fill: none;
+    commands: "M18 6 6 18";
+}
+
+component CloseButton2 inherits Path {
+    viewbox-x: 0;
+    viewbox-y: 0;
+    viewbox-width: 24;
+    viewbox-height: 24;
+    stroke: black;
+    stroke-width: 1.5px;
+    // fill: none;
+    commands: "m6 6 12 12";
+}
+
+export component Title inherits Rectangle {
+
+    in-out property <string> title-name: "PLAYLIST";
+
+    callback minium-clicked();
+    callback close-clicked();
+
+    HorizontalLayout {
+        width: parent.width;
+        height: parent.height;
+        spacing: 0px;
+        alignment: space-between;
+        padding-left: 25px;
+
+        VerticalLayout{
+            alignment: center;
+            logo_ico := Rectangle {
+
+                Text {
+                    font-weight: 500;
+                    font-size: 17px;
+                    color: black;
+                    letter-spacing: 0.7px;
+                    text: title-name;
+                }
+            }
+        }
+
+        HorizontalLayout {
+            alignment: center;
+            spacing: 0px;
+            Rectangle {
+                minium_area := TouchArea {
+                    width: parent.width;
+                    height: parent.height;
+                    mouse-cursor: pointer;
+                    clicked => {
+                        minium-clicked();
+                    }
+                }
+
+                width: 40px;
+                height: 32px;
+                background: white;
+
+                Rectangle {
+                    width: 13px;
+                    height: 13px;
+
+                    MiniumButton {}
+                }
+
+                states [
+                    hover1 when minium_area.has-hover: {
+                        background: #f4f4f5;
+                        in {
+                            animate background { duration: 100ms; delay: 0; }
+                        }
+                    }
+                ]
+            }
+            Rectangle {
+                maxium_area := TouchArea {
+                    width: parent.width;
+                    height: parent.height;
+                    // mouse-cursor: pointer;
+                }
+
+                width: 40px;
+                height: 32px;
+                background: white;             
+
+                Rectangle {
+                    width: 13px;
+                    height: 13px;
+                    background: white;
+
+                    MaxiumButton {
+                        stroke: #ccc;
+                    }
+                }
+            }
+            Rectangle {
+                close_area := TouchArea {
+                    width: parent.width;
+                    height: parent.height;
+                    mouse-cursor: pointer;
+                    clicked => {
+                        close-clicked();
+                    }
+                }
+
+                width: 40px;
+                height: 32px;
+                background: white;
+
+                Rectangle {
+                    width: 13px;
+                    height: 13px;
+
+                    cls_btn1 := CloseButton1 {
+                        fill: black;
+                    }
+                    cls_btn2 := CloseButton2 {
+                        fill: black;
+                    }
+                }
+
+                states [
+                    hover1 when close_area.has-hover: {
+                        background: #ef4444;
+                        cls_btn1.fill: #ef4444;
+                        cls_btn2.fill: #ef4444;
+                        in {
+                            animate background { duration: 100ms; delay: 0; }
+                            animate cls_btn1.fill { duration: 100ms; delay: 0; }
+                            animate cls_btn2.fill { duration: 100ms; delay: 0; }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+    
+}

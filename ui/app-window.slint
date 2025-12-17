@@ -2,6 +2,7 @@ import { Button, VerticalBox } from "std-widgets.slint";
 import { Logo } from "components/logo.slint";
 import { FavList } from "components/fav-list.slint";
 import { User } from "components/user.slint";
+import { Title } from "components/title.slint";
 
 export component AppWindow inherits Window {
     no-frame: true;
@@ -14,6 +15,8 @@ export component AppWindow inherits Window {
     property <length> drag-area-down-y: 0;
 
     callback move-window(length, length);
+    callback minium-clicked();
+    callback close-clicked();
     // in-out property <int> counter: 0;
     // callback request-increase-value();
 
@@ -128,8 +131,14 @@ export component AppWindow inherits Window {
                         width: 599px;
                         height: 48px;
                         background: white;
-                        Text {
-                            text: "title";
+                        
+                        Title {
+                            minium-clicked => {
+                                minium-clicked();
+                            }
+                            close-clicked => {
+                                close-clicked();
+                            }
                         }
                     }
 
