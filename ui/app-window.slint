@@ -15,7 +15,6 @@ export component AppWindow inherits Window {
     width: 800px;
     height: 580px;
 
-
     property <bool> drag-area-pressed: false;
     property <length> drag-area-down-x: 0;
     property <length> drag-area-down-y: 0;
@@ -23,10 +22,14 @@ export component AppWindow inherits Window {
     callback move-window(length, length);
     callback minium-clicked();
     callback close-clicked();
-    // in-out property <int> counter: 0;
-    // callback request-increase-value();
 
-
+    // user
+    in-out property <string> user-id;
+    in-out property <string> user-name;
+    in-out property <bool> is-vip;
+    callback username-clicked();
+    callback vip-clicked();
+    
 
     function process_move_event(i: int, ev: PointerEvent, is_pressed: bool, x: length, y: length) {
         if ev.kind == PointerEventKind.down {
@@ -105,8 +108,13 @@ export component AppWindow inherits Window {
                         width: parent.width;
                         height: 69px;
 
-                        User{
-                            
+                        User {
+                            username-clicked => {
+                                username-clicked();
+                            }
+                            vip-clicked => {
+                                vip-clicked();
+                            }
                         }
                     }
                 }

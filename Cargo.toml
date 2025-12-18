@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+reqwest = { version = "0.12.26", features=["json", "cookies", "gzip", "blocking"] }
+serde = { version = "1.0", features = ["derive"] }
 slint = { version = "1.14.1" }
 
 [build-dependencies]

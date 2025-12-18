@@ -1,4 +1,9 @@
 export component User inherits Rectangle {
+
+    callback profile-clicked();
+    callback username-clicked();
+    callback vip-clicked();
+
     HorizontalLayout {
         width: parent.width;
         height: parent.height;
@@ -12,7 +17,7 @@ export component User inherits Rectangle {
                 Rectangle {
                     in-out property <bool> is_animate: false;
 
-                    width: 28px;
+                    width: 28px; 
                     height: 28px;
                     border-radius: 6px;
                     background: #fb7185;
@@ -50,6 +55,10 @@ export component User inherits Rectangle {
                         width: parent.width;
                         height: parent.height;
                         mouse-cursor: pointer;
+
+                        clicked => { 
+                            username-clicked();
+                        }
                     }
                 }
             }
@@ -83,6 +92,8 @@ export component User inherits Rectangle {
                     width: parent.width;
                     height: parent.height;
                     mouse-cursor: pointer;
+
+                    clicked => { vip-clicked(); }
                 }
 
                 states [
