@@ -18,6 +18,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     //     }
     // });
 
+    ui.global::<MathHelper>().on_to_percent(|value| value * 100.0);
+
     ui.on_move_window({
         let h = ui.as_weak();
         move |offset_x, offset_y|{

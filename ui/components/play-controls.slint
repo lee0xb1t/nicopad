@@ -1,0 +1,688 @@
+import { VerticalBox, ListView, HorizontalBox } from "std-widgets.slint";
+
+component PrevButton inherits Rectangle {
+    property <brush> stroke: #868687;
+    property <brush> fill: #868687;
+
+    callback prev_clicked();
+
+    prev_area := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            prev_clicked();
+        }
+    }
+
+    Path {
+        width: 14px;
+        height: 14px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        commands: "M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z";
+    }
+
+    Path {
+        width: 14px;
+        height: 14px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        commands: "M3 20V4";
+    }
+
+    states [
+        prev_hover when prev_area.has-hover : {
+            stroke: #27272a;
+            fill: #27272a;
+            in {
+                animate stroke { duration: 150ms; delay: 0ms; }
+                animate fill { duration: 150ms; delay: 0ms; }
+            }
+        }
+        
+    ]
+}
+
+component NextButton inherits Rectangle {
+    property <brush> stroke: #868687;
+    property <brush> fill: #868687;
+
+    callback next_clicked();
+    
+    next_area := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            next_clicked();
+        }
+    }
+
+    Path {
+        width: 14px;
+        height: 14px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        commands: "M21 4v16";
+    }
+
+    Path {
+        width: 14px;
+        height: 14px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        commands: "M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z";
+    }
+    
+    states [
+        next_hover when next_area.has-hover : {
+            stroke: #27272a;
+            fill: #27272a;
+            in {
+                animate stroke { duration: 150ms; delay: 0ms; }
+                animate fill { duration: 150ms; delay: 0ms; }
+            }
+        }
+    ]
+}
+
+component PlayButton inherits Rectangle {
+    in property <brush> stroke: #fff;
+    in property <brush> fill: #fff;
+
+    in-out property <bool> is-pause: false;
+
+    callback play_clicked(bool);
+
+    border-radius: 28px;
+    background: #fb7185;
+    drop-shadow-color: #fecdd3e0;
+    drop-shadow-blur: 10px;
+
+    play_area := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            is-pause = !is-pause;
+            play_clicked(is-pause);
+        }
+    }
+
+    Path {
+        // play
+        visible: is-pause;
+        width: 12px;
+        height: 12px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1px;
+        fill: fill;
+        commands: "M16,4 h3 a1,1 0 0,1 1,1 v14 a1,1 0 0,1 -1,1 h-3 a1,1 0 0,1 -1,-1 v-14 a1,1 0 0,1 1,-1 z M7,4 h3 a1,1 0 0,1 1,1 v14 a1,1 0 0,1 -1,1 h-3 a1,1 0 0,1 -1,-1 v-14 a1,1 0 0,1 1,-1 z";
+    }
+
+    Path {
+        // pause
+        visible: !is-pause;
+        width: 12px;
+        height: 12px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1px;
+        fill: fill;
+        commands: "M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z";
+    }
+}
+
+component SettingsButton inherits Rectangle {
+    property <brush> stroke: #A1A1AAe0;
+    property <brush> fill: white;
+
+    callback next_clicked();
+    
+    settings_area := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            next_clicked();
+        }
+    }
+
+    Path {
+        width: 15px;
+        height: 15px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        commands: "M9.671 4.136 a2.34 2.34 0 0 1 4.659 0 a2.34 2.34 0 0 0 3.319 1.915 a2.34 2.34 0 0 1 2.33 4.033 a2.34 2.34 0 0 0 0 3.831 a2.34 2.34 0 0 1 -2.33 4.033 a2.34 2.34 0 0 0 -3.319 1.915 a2.34 2.34 0 0 1 -4.659 0 a2.34 2.34 0 0 0 -3.32 -1.915 a2.34 2.34 0 0 1 -2.33 -4.033 a2.34 2.34 0 0 0 0 -3.831 a2.34 2.34 0 0 1 2.33 -4.033 a2.34 2.34 0 0 0 3.319 -1.915 Z M15 12 A3 3 0 1 0 9 12 A3 3 0 1 0 15 12 Z";
+    }
+    
+    states [
+        settings_hover when settings_area.has-hover : {
+            stroke: #52525Be0;
+            in {
+                animate stroke { duration: 150ms; delay: 0ms; }
+            }
+        }
+    ]
+}
+
+component PlayOrderButton inherits Rectangle {
+    property <brush> stroke: #A1A1AAe0;
+    property <brush> fill: white;
+
+    callback next_clicked();
+    
+    next_area := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            next_clicked();
+        }
+    }
+
+    Path {
+        width: 15px;
+        height: 15px;
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        commands: "M17 2 l4 4 l-4 4 M3 11 v-1 a4 4 0 0 1 4-4 h14 M7 22 l-4-4 l4-4 M21 13 v1 a4 4 0 0 1-4 4 H3";
+    }
+    
+    states [
+        next_hover when next_area.has-hover : {
+            stroke: #52525Be0;
+            in {
+                animate stroke { duration: 150ms; delay: 0ms; }
+            }
+        }
+    ]
+}
+
+component VolumnArea inherits Rectangle {
+    property <brush> stroke: #A1A1AAe0;
+    property <brush> fill: white;
+
+    in-out property <percent> volumn: 50%;
+    
+    callback to_percent(float) -> percent;
+    callback volumn-change(float);
+
+    HorizontalLayout {
+        alignment: start;
+        spacing: 15px;
+
+        Rectangle {
+            Path {
+                width: 15px;
+                height: 15px;
+                viewbox-x: 0;
+                viewbox-y: 0;
+                viewbox-width: 24;
+                viewbox-height: 24;
+                stroke: stroke;
+                stroke-width: 1.5px;
+                fill: fill;
+                commands: "M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z M16 9a5 5 0 0 1 0 6 M19.364 18.364a9 9 0 0 0 0-12.728";
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+            
+            volumn_bar := Rectangle {
+                TouchArea {
+                    width: 100%;
+                    height: 100%;
+                    mouse-cursor: pointer;
+
+                    moved => {
+                        if self.mouse-x <= 0 {
+                            volumn = to_percent(0.0);
+                            volumn-change(volumn);
+                        } else if self.mouse-x >= self.width {
+                            volumn = to_percent(1.0);
+                            volumn-change(volumn);
+                        } else {
+                            volumn = to_percent((self.mouse-x / self.width));
+                            volumn-change(volumn);
+                        }
+                    }
+
+                    pointer-event(event) => {
+                        if event.button == PointerEventButton.left {
+                            if event.kind == PointerEventKind.down {
+                                volumn = to_percent((self.mouse-x / self.width));
+                                volumn-change(volumn);
+                            }
+                        }
+                    }
+                }
+
+                width: 80%;
+                height: 3.8px;
+                border-radius: 3px;
+                background: #e4e4e7;
+                clip: true;
+
+                HorizontalLayout {
+                    pending := Rectangle {
+                        width: volumn;
+                        background: #fb7185;
+                    }
+                    remain := Rectangle {
+                        background: #e4e4e7;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+component QualityButton inherits Rectangle {
+    property <brush> stroke: #ccc;
+    property <brush> fill: white;
+
+    callback next_clicked();
+    
+    quality_area := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            next_clicked();
+        }
+    }
+
+    quality_rect := Rectangle {
+        width: 30px;
+        height: 19px;
+        border-radius: 5px;
+        border-color: #E4E4E7;
+        border-width: 1px;
+        background: white;
+
+        quality_text := Text {
+            font-size: 8pt;
+            font-weight: 700;
+            color: #71717A;
+            text: "HD";
+        }
+    }
+    
+    states [
+        quality_hover when quality_area.has-hover : {
+            quality_rect.border-color: #FB7185;
+            quality_text.color: #FB7185;
+            in {
+                animate quality_rect.border-color { duration: 150ms; delay: 0ms; }
+                animate quality_text.color { duration: 150ms; delay: 0ms; }
+            }
+        }
+    ]
+}
+
+component Progress inherits Rectangle {
+    in-out property <percent> progress: 20%;
+
+    callback to_percent(float) -> percent;
+    callback progress-change(float);
+
+    HorizontalBox {
+        Rectangle {
+            Text {
+                color: #71717a;
+                letter-spacing: 0.5px;
+                font-size: 8pt;
+                text: "0:00";
+            }
+        }
+        
+        VerticalLayout {
+            alignment: center;
+            padding-top: -3.5px;
+
+            Rectangle {
+                // width: 200px;
+                height: 10px;
+
+                Rectangle {
+                    // cursor
+                    x: pending.width;
+                    y: 0;
+                    width: 10px;
+                    height: 10px;
+                    background: white;
+                    border-color: #e5e7eb;
+                    border-radius: 10px;
+                    border-width: 1px;
+                    z: 10;
+                }
+
+                HorizontalBox {
+                    padding: 3px;
+
+                    progress_bar := Rectangle {
+                        TouchArea {
+                            width: 100%;
+                            height: 100%;
+                            mouse-cursor: pointer;
+
+                            moved => {
+                                if self.mouse-x <= 0 {
+                                    progress = to_percent(0.0);
+                                    progress-change(progress);
+                                } else if self.mouse-x >= self.width {
+                                    progress = to_percent(1.0);
+                                    progress-change(progress);
+                                } else {
+                                    progress = to_percent((self.mouse-x / self.width));
+                                    progress-change(progress);
+                                }
+                            }
+
+                            pointer-event(event) => {
+                                if event.button == PointerEventButton.left {
+                                    if event.kind == PointerEventKind.down {
+                                        progress = to_percent((self.mouse-x / self.width));
+                                        progress-change(progress);
+                                    }
+                                }
+                            }
+                        }
+
+                        width: 97%;
+                        border-radius: 3px;
+                        background: #e4e4e7;
+                        clip: true;
+
+                        HorizontalLayout {
+                            pending := Rectangle {
+                                width: progress;
+                                background: #fb7185;
+                            }
+                            remain := Rectangle {
+                                background: #e4e4e7;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            Text {
+                color: #71717a;
+                letter-spacing: 0.5px;
+                font-size: 8pt;
+                text: "4:00";
+            }
+        }
+    }
+}
+
+export component PlayControls inherits Rectangle {
+    in-out property <percent> progress: 0%;
+    in-out property <percent> volumn: 50%;
+
+    
+    callback progress-change(float);
+    callback volumn-change(float);
+
+    callback to_percent(float) -> percent;
+
+    width: 798px;
+    height: 59px;
+    border-width: 1px;
+    border-radius: 8px;
+    background: white;
+    border-color: white;
+
+    HorizontalLayout {
+        padding: 5px;
+        spacing: 10px;
+        alignment: start;
+        padding-left: 15px;
+        
+        VerticalLayout {
+            alignment: center;
+            
+            Rectangle {
+                width: 35px;
+                height: 35px;
+                border-radius: 10px;
+                background: #ccc;
+                clip: true;
+                
+                Image {
+                    width: 38px;
+                    height: 38px;
+                    source: @image-url("../assets/audio_album.jpg");
+                }
+            }
+        }
+        
+        VerticalLayout {
+            alignment: center;
+
+            Rectangle {
+                width: 170px;
+                height: 30px;
+
+                HorizontalLayout {
+                    alignment: start;
+
+                    VerticalLayout {
+                        alignment: space-evenly;
+                        audio_text := Text {
+                            color: #27272a;
+                            font-weight: 600;
+                            font-size: 9pt;
+                            letter-spacing: 0.4px;
+                            text: "Hachimi Music 01";
+                        }
+
+                        Text {
+                            color: #71717a90;
+                            font-weight: 600;
+                            font-size: 9pt;
+                            letter-spacing: 0.4px;
+                            text: "Chen";
+                        }
+                    }
+                }
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            Rectangle {
+                width: 330px;
+                height: 30px;
+
+                HorizontalLayout {
+                    alignment: center;
+                    spacing: 10px;
+
+                    VerticalLayout {
+                        alignment: center;
+                        PrevButton {
+                            width: 14px;
+                            height: 14px;
+
+                            prev_clicked => {
+                                debug("prev clicked!");
+                            }
+                        }
+                    }
+
+                    PlayButton {
+                        is-pause: false;
+
+                        width: 28px;
+                        height: 28px;
+
+                        play_clicked(is-pause) => {
+                            debug("next clicked!", is-pause);
+                        }
+                    }
+
+                    VerticalLayout {
+                        alignment: center;
+                        NextButton {
+                            width: 14px;
+                            height: 14px;
+
+                            next_clicked => {
+                                debug("next clicked!");
+                            }
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                // progress
+                width: 330px;
+                height: 20px;
+                
+                Progress {
+                    width: 100%;
+                    height: 20px;
+
+                    progress: progress;
+
+                    to_percent(f) => {
+                        to_percent(f);
+                    }
+
+                    progress-change(f) => {
+                        progress-change(f);
+                        debug(f);
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            width: 200px;
+            height: 100%;
+            // background: #eee;
+            
+            HorizontalLayout {
+                spacing: 5px;
+                alignment: end;
+
+                VerticalBox {
+                    padding: 0px;
+                    alignment: center;
+                    SettingsButton {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+
+                VerticalBox {
+                    padding: 0px;
+                    alignment: center;
+                    PlayOrderButton {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+
+                VerticalBox {
+                    padding: 0px;
+                    alignment: center;
+                    Rectangle {
+                        width: 1px;
+                        height: 15px;
+                        background: #ccc;
+                    }
+                }
+
+                VerticalBox {
+                    padding: 0px;
+                    alignment: center;
+                    Rectangle {
+                        width: 5px;
+                    }
+                }
+
+                VerticalBox {
+                    padding: 0px;
+                    alignment: center;
+                    VolumnArea {
+                        width: 100px;
+                        height: 20px;
+
+                        volumn: volumn;
+
+                        to_percent(f) => {
+                            to_percent(f);
+                        }
+
+                        volumn-change(f) => {
+                            volumn-change(f);
+                        }
+                    }
+                }
+
+                VerticalBox {
+                    padding: 0px;
+                    alignment: center;
+                    QualityButton {
+                        width: 40px;
+                    }
+                }
+            }
+        }
+    }
+}

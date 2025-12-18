@@ -1,0 +1,246 @@
+import { VerticalBox, ListView } from "std-widgets.slint";
+
+component PlayIcon inherits Path {
+    viewbox-x: 0;
+    viewbox-y: 0;
+    viewbox-width: 24;
+    viewbox-height: 24;
+    stroke: black;
+    stroke-width: 1.5px;
+    // fill: none;
+    commands: "M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z";
+}
+
+component PlayingIcon inherits Rectangle {
+    in property <brush> stroke;
+    in property <brush> fill;
+    in property <length> p-width;
+    in property <length> p-height;
+
+    Path {
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        width: p-width;
+        height: p-height;
+        commands: "M5 21v-6";
+    }
+    Path {
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        width: p-width;
+        height: p-height;
+        commands: "M12 21V3";
+    }
+    Path {
+        viewbox-x: 0;
+        viewbox-y: 0;
+        viewbox-width: 24;
+        viewbox-height: 24;
+        stroke: stroke;
+        stroke-width: 1.5px;
+        fill: fill;
+        width: p-width;
+        height: p-height;
+        commands: "M19 21V9";
+    }
+}
+
+component DataContainer inherits VerticalBox {
+    // padding-left: 20px;
+    // padding-top: 10px;
+    spacing: 0px;
+}
+
+component PlayEntry inherits Rectangle {
+    in-out property <int> index: 0;
+    in-out property <bool> is_choice: false;
+    callback entry_click();
+
+    width: 572px;
+    height: 66px;
+    border-width: 1px;
+    border-radius: 8px;
+    background: white;
+    border-color: white;
+    // border-color: #fafafa;
+    // background: #f4f4f5;
+
+    entry_area := TouchArea {
+        width: parent.width;
+        height: parent.height;
+        mouse-cursor: pointer;
+
+        clicked => {
+            entry_click();
+        }
+    }
+
+    HorizontalLayout {
+        padding: 5px;
+        spacing: 10px;
+        alignment: start;
+        padding-left: 10px;
+        
+        VerticalLayout {
+            alignment: center;
+
+            Rectangle {
+                width: 20px;
+                height: 20px;
+
+                PlayIcon {
+                    visible: !is_choice && entry_area.has-hover;
+                    width: 12px;
+                    height: 12px;
+                    stroke: #fb7185ff;
+                    fill: #fb7185ff;
+                }
+
+                PlayingIcon {
+                    visible: is_choice;
+                    p-width: 13px;
+                    p-height: 13px;
+                    stroke: #fb7185ff;
+                    fill: #fb7185ff;
+                }
+
+                Text {
+                    visible: !is_choice && !entry_area.has-hover;
+                    font-size: 10pt;
+                    color: #a1a1aa;
+                    text: index;
+                }
+            }
+        }
+        
+        VerticalLayout {
+            alignment: center;
+            
+            Rectangle {
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                background: #ccc;
+                clip: true;
+                
+                Image {
+                    width: 38px;
+                    height: 38px;
+                    source: @image-url("../assets/audio_album.jpg");
+                }
+            }
+        }
+        
+        VerticalLayout {
+            alignment: center;
+
+            Rectangle {
+                width: 420px;
+                height: 38px;
+
+                HorizontalLayout {
+                    alignment: start;
+
+                    VerticalLayout {
+                        alignment: space-between;
+                        audio_text := Text {
+                            color: #27272a;
+                            font-weight: 600;
+                            font-size: 10.5pt;
+                            letter-spacing: 0.4px;
+                            text: "Hachimi Music 01";
+                        }
+
+                        Text {
+                            color: #71717a90;
+                            font-weight: 600;
+                            font-size: 9pt;
+                            letter-spacing: 0.4px;
+                            text: "Chen";
+                        }
+                    }
+                }
+            }
+        }
+
+        VerticalLayout {
+            alignment: center;
+
+            Rectangle {
+                Text {
+                    color: #71717a;
+                    font-weight: 500;
+                    font-size: 10pt;
+                    letter-spacing: 0.4px;
+                    text: "03:30";
+                }
+            }
+        }
+       
+    }
+
+    states [ 
+        entry_hover when !is_choice && entry_area.has-hover: {
+            border-color: #fafafa;
+            background: #f4f4f5;
+            in {
+                animate border-color { duration: 100ms; delay: 0ms; }
+                animate background { duration: 100ms; delay: 0ms; }
+            }
+        }
+        is_choice1 when is_choice: {
+            audio_text.color: #fb7185ff;
+            background: #f4f4f5;
+            border-color: #e4e4e780;
+            in {
+                animate audio_text.color { duration: 100ms; delay: 0ms; }
+                animate background { duration: 100ms; delay: 0ms; }
+                animate border-color { duration: 100ms; delay: 0ms; }
+            }
+        }
+    ]
+}
+
+
+export component PlayList inherits Rectangle {
+    
+    VerticalBox {
+        width: parent.width;
+        height: parent.height;
+        spacing: 0px;
+        alignment: start;
+        
+        DataContainer {
+            in-out property <int> choice_idx: 0;
+
+            width: parent.width;
+            height: parent.height;
+            
+            ListView {
+                height: 453px;
+                vertical-scrollbar-policy: always-off;
+                
+                for data in 20  : PlayEntry {
+                index: data;
+                is_choice: choice_idx == self.index;
+                entry_click => {
+                    choice_idx = self.index;
+                    debug(self.index);
+                }
+            }
+            }
+        }
+
+    }
+    
+}

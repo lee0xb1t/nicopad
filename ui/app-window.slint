@@ -3,6 +3,12 @@ import { Logo } from "components/logo.slint";
 import { FavList } from "components/fav-list.slint";
 import { User } from "components/user.slint";
 import { Title } from "components/title.slint";
+import { PlayList } from "components/play-list.slint";
+import { PlayControls } from "components/play-controls.slint";
+
+export global MathHelper  {
+    pure callback to_percent(float) -> percent;
+}
 
 export component AppWindow inherits Window {
     no-frame: true;
@@ -153,9 +159,8 @@ export component AppWindow inherits Window {
                         // main
                         width: 599px;
                         background: white;
-                        Text {
-                            text: "main";
-                        }
+                    
+                        PlayList {}
                     }
                 }
             }
@@ -173,8 +178,11 @@ export component AppWindow inherits Window {
                 height: 59px;
                 x: 1px;
                 background: white;
-                Text {
-                    text: "bottom";
+                
+                PlayControls {
+                    to_percent(f) => {
+                        MathHelper.to_percent(f);
+                    }
                 }
             }
         }
