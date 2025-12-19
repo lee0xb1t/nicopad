@@ -1,51 +1,42 @@
-pub mod qrcode {
-    use reqwest::{self};
-    use serde::Deserialize;
+use reqwest::{self, blocking::Client};
+use std::sync::Arc;
 
-    #[derive(Debug, Default, Deserialize)]
-    pub struct QRCodeData {
-        pub url: String,
-        pub qrcode_key: String,
+pub fn load_image(url: String) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    let resp = reqwest::blocking::get(url)?;
+    let resp = resp.bytes()?;
+    Ok(resp.to_vec())
+}
+
+pub mod fav;
+pub mod qrcode;
+pub mod user;
+
+pub struct ApiClient {
+    client: Arc<Client>,
+}
+
+impl ApiClient {
+    pub fn new() -> Self {
+        Self {
+            client: Arc::new(Client::builder().cookie_store(true).build().unwrap()),
+        }
     }
 
-    #[derive(Debug, Default, Deserialize)]
-    pub struct QRCodeResp {
-        pub code: i32,
-        pub message: String,
-        pub ttl: i32,
-        pub data: QRCodeData,
+    pub fn qrcode(&self) -> qrcode::QRCodeApi {
+        qrcode::QRCodeApi {
+            client: Arc::clone(&self.client),
+        }
     }
 
-    #[derive(Debug, Default, Deserialize)]
-    pub struct QRCodePollData {
-        pub url: String,
-        pub refresh_token: String,
-        pub timestamp: i32,
-        pub code: i32,
-        pub message: i32,
+    pub fn user(&self) -> user::UserApi {
+        user::UserApi {
+            client: Arc::clone(&self.client),
+        }
     }
 
-    #[derive(Debug, Default, Deserialize)]
-    pub struct QRCodePollResp {
-        pub code: i32,
-        pub message: String,
-        pub data: QRCodePollData,
-    }
-
-    pub fn generate() -> Result<QRCodeResp, Box<dyn std::error::Error>> {
-        let resp = reqwest::blocking::get(
-            "https://passport.bilibili.com/x/passport-login/web/qrcode/generate",
-        )?;
-        let resp = resp.json::<QRCodeResp>()?;
-        Ok(resp)
-    }
-
-    pub fn poll(qrcode_key: String) -> Result<QRCodePollResp, Box<dyn std::error::Error>> {
-        let resp = reqwest::blocking::get(format!(
-            "https://passport.bilibili.com/x/passport-login/web/qrcode/poll?qrcode_key={}",
-            qrcode_key
-        ))?;
-        let resp = resp.json::<QRCodePollResp>()?;
-        Ok(resp)
+    pub fn fav(&self) -> fav::FavApi {
+        fav::FavApi {
+            client: Arc::clone(&self.client),
+        }
     }
 }

@@ -5,6 +5,7 @@ import { User } from "components/user.slint";
 import { Title } from "components/title.slint";
 import { PlayList } from "components/play-list.slint";
 import { PlayControls } from "components/play-controls.slint";
+import { FavListModel } from "types.slint";
 
 export global MathHelper  {
     pure callback to_percent(float) -> percent;
@@ -24,11 +25,20 @@ export component AppWindow inherits Window {
     callback close-clicked();
 
     // user
-    in-out property <string> user-id;
-    in-out property <string> user-name;
-    in-out property <bool> is-vip;
+    in-out property <bool> is-login: false;
+    in-out property <image> qrcode;
+    in-out property <bool> is-scan-qrcode: false;
+    callback request-login();
+    
+    in-out property <int> user-id;
+    in-out property <string> user-name: "Login";
+    in-out property <image> user-image;
+    in-out property <bool> is-vip: false;
     callback username-clicked();
     callback vip-clicked();
+
+    // fav
+    in-out property <[FavListModel]> fav-list;
     
 
     function process_move_event(i: int, ev: PointerEvent, is_pressed: bool, x: length, y: length) {
@@ -43,6 +53,62 @@ export component AppWindow inherits Window {
         } else if ev.kind == PointerEventKind.move && is_pressed {
             move-window(x - drag-area-down-x, y - drag-area-down-y);
         }
+    }
+
+    popup_qrcode := PopupWindow {
+        close-policy: no-auto-close;
+
+        x: 300px; y: 200px; height: 250px; width: 250px;
+        visible: !is-login;
+
+        Rectangle {
+            width: 100%;
+            height: 100%;
+            background: #fafafa;
+            border-radius: 10px;
+            drop-shadow-blur: 5px;
+            drop-shadow-color: #aaaab2;
+            
+            VerticalLayout {
+                Rectangle {
+                    height: 40px;
+                    Text {
+                        font-size: 15pt;
+                        color: #fb7185;
+                        TouchArea {
+                            width: 100%;
+                            height: 100%;
+                            mouse-cursor: pointer;
+                            clicked => {
+                                popup_qrcode.close();
+                            }
+                        }
+                        text: "close";
+                    }
+                }
+
+                Image {
+                    source: qrcode;
+                }
+
+                Rectangle {
+                    height: 40px;
+                    Text {
+                        font-size: 15pt;
+                        color: #fb7185;
+                        text: is-login ? "login success" : (is-scan-qrcode ? "scanned qrcode" : "scan qrcode");
+                    }
+                }
+            }
+        }
+    }
+
+    public function show-login-qrcode() {
+        popup_qrcode.show();
+    }
+
+    public function close-login-qrcode() {
+        popup_qrcode.close();
     }
 
     Rectangle {
@@ -91,6 +157,8 @@ export component AppWindow inherits Window {
                         height: 365px;
 
                         FavList {
+                            fav-list: fav-list;
+                            
                             width: parent.width;
                             height: parent.height;
                         }
@@ -109,11 +177,26 @@ export component AppWindow inherits Window {
                         height: 69px;
 
                         User {
+                            user-id: user-id;
+                            user-name: user-name;
+                            user-image: user-image;
+                            is-vip: is-vip;
+
                             username-clicked => {
-                                username-clicked();
+                                if is-login {
+                                    username-clicked();
+                                } else {
+                                    show-login-qrcode();
+                                    request-login();
+                                }
                             }
                             vip-clicked => {
-                                vip-clicked();
+                                if is-login {
+                                    vip-clicked();
+                                } else {
+                                    show-login-qrcode();
+                                    request-login();
+                                }
                             }
                         }
                     }

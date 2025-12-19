@@ -1,4 +1,8 @@
 export component User inherits Rectangle {
+    in-out property <int> user-id;
+    in-out property <string> user-name: "Login";
+    in-out property <image> user-image;
+    in-out property <bool> is-vip;
 
     callback profile-clicked();
     callback username-clicked();
@@ -22,11 +26,11 @@ export component User inherits Rectangle {
                     border-radius: 6px;
                     background: #fb7185;
 
-                    Text {
-                        font-weight: 800;
-                        font-size: 13px;
-                        color: white;
-                        text: "";
+                    Image {
+                        width: parent.width;
+                        height: parent.height;
+                        image-fit: contain;
+                        source: user-image;
                     }
                     
                     profile_area := TouchArea {
@@ -48,7 +52,7 @@ export component User inherits Rectangle {
                     Text {
                         font-size: 10pt;
                         color: black;
-                        text: "Chen";
+                        text: user-name;
                     }
 
                     name_area := TouchArea {
