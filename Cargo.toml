@@ -9,6 +9,8 @@ image = "0.25.9"
 reqwest = { version = "0.12.26", features=["json", "cookies", "gzip", "blocking"] }
 serde = { version = "1.0", features = ["derive"] }
 slint = { version = "1.14.1" }
+md-5 = "0.10.6"
+base16ct = "0.3.0"
 
 [build-dependencies]
 slint-build = "1.14.1"

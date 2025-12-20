@@ -1,6 +1,7 @@
 // Prevent console window in addition to Slint window in Windows release builds when, e.g., starting the app via file manager. Ignored on other platforms.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::path::Path;
 use std::sync::atomic::AtomicBool;
 use std::sync::mpsc::channel;
 use std::sync::{Arc, Mutex};
@@ -8,7 +9,10 @@ use std::time::Duration;
 use std::{error::Error, thread};
 use std::rc::Rc;
 
-use image::Rgb;
+use image::imageops::FilterType;
+use md5::{Md5, Digest};
+
+use image::{EncodableLayout, Rgb};
 use qrcode::QrCode;
 use slint::{LogicalPosition, SharedString, VecModel, ModelRc};
 
@@ -33,6 +37,8 @@ struct AppState {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    std::fs::create_dir_all("./_cache")?;
+
     let app_state = Arc::new(Mutex::new(AppState::default()));
     let api = Arc::new(api::ApiClient::new());
 
@@ -70,16 +76,79 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     });
 
+    // TODO load image
+    // ui.on_load_image({
+    //     let h: slint::Weak<AppWindow> = ui.as_weak();
+    //     move |url: SharedString, img: slint::Image| -> slint::Image {
+    //         let ui = h.unwrap();
+    //         println!("{}", url.to_string());
+            
+    //         let buffer = img.to_rgb8();
+    //         println!("1");
+    //         if let Some(mut b) = buffer {
+    //             let image = api::load_image(url.into()).unwrap();
+    //             let image = image::load_from_memory(&image).unwrap();
+    //             let image = image.resize(200, 110, FilterType::Triangle);
+    //             let buffer = slint::SharedPixelBuffer::<slint::Rgb8Pixel>::clone_from_slice(
+    //                 image.as_bytes(),
+    //                 200,
+    //                 110,
+    //             );
+    //             println!("2");
+    //             let simage = slint::Image::from_rgb8(buffer);
+    //             println!("3");
+    //             // b.make_mut_slice().copy_from_slice(simage.to_rgb8().unwrap().as_slice());
+    //             // simage.to_rgb8().unwrap().as_slice();
+    //             println!("{}, {}", b.make_mut_slice().len(), simage.to_rgb8().unwrap().as_slice().len());
+    //             // b.make_mut_slice().copy_from_slice(simage.to_rgb8().unwrap().as_slice());
+    //             let a = simage.to_rgb8().unwrap();
+    //             let a = a.as_slice();
+    //             unsafe {
+    //                 std::ptr::copy_nonoverlapping(a.as_ptr(), b.make_mut_slice().as_mut_ptr(), a.len());
+    //             }
+                
+    //         } else {
+    //             println!("buffer is None");
+    //         }
+
+    //         // let filename = Path::new(&url).file_name().and_then(|s|s.to_str()).unwrap();
+    //         // let file = format!("_cache/{}", filename);
+            
+    //         // let path = std::path::Path::new(&file);
+    //         // if !path.exists() {
+    //         //     std::fs::File::create(format!("_cache/{}", filename)).unwrap();
+    //         // } else {
+    //         //     let filename_clone = filename.to_string().clone();
+    //         //     thread::spawn(move || {
+    //         //         let image = api::load_image(url.into()).unwrap();
+    //         //         let image = image::load_from_memory(&image).unwrap();
+    //         //         image.save(format!("_cache/{}", filename_clone)).unwrap();
+    //         //     });
+    //         // }
+
+    //         slint::Image::default()
+            
+    //         // let image = api::load_image(url.into()).unwrap();
+    //         // let image = image::load_from_memory(&image).unwrap();
+    //         // let buffer = slint::SharedPixelBuffer::<slint::Rgb8Pixel>::clone_from_slice(
+    //         //     image.as_bytes(),
+    //         //     image.width(),
+    //         //     image.height(),
+    //         // );
+    //         // slint::Image::from_rgb8(buffer)
+    //     }
+    // });
+
     // user
     ui.on_request_login({
         let h = ui.as_weak();
         let app_state = Arc::clone(&app_state);
+        let api = Arc::clone(&api);
         move || {
             let ui = h.unwrap();
 
             let qrcode = api.qrcode();
             let qrcoderesp = qrcode.generate().expect("Failed to load qrcode url");
-            println!("{:#?}", qrcoderesp);
 
             let qrcode = QrCode::new(qrcoderesp.data.url).expect("Failed to create qrcode");
             let qrcode = qrcode.render::<Rgb<u8>>().min_dimensions(200, 200).build();
@@ -98,6 +167,35 @@ fn main() -> Result<(), Box<dyn Error>> {
             on_request_login(h, qrcoderesp.data.qrcode_key, app_state, api);
         }
     });
+
+    // fav
+    ui.on_fav_entry_clicked({
+        let h = ui.as_weak();
+        let api = Arc::clone(&api);
+
+        move |favid| {
+            let ui = h.unwrap();
+
+            let h = ui.as_weak();
+            let api = Arc::clone(&api);
+            on_fav_entry_clicked(h, favid.to_string(), api);
+        }
+    });
+
+    // play list
+    // ui.on_play_entry_clicked({
+    //     let h = ui.as_weak();
+    //     let api = Arc::clone(&api);
+
+    //     move |bvid, title, cover, duration, duration_mins: | {
+    //         let ui = h.unwrap();
+
+    //         let h = ui.as_weak();
+    //         let api = Arc::clone(&api);
+            
+    //     }
+    // });
+
 
     ui.run()?;
 
@@ -216,7 +314,7 @@ fn on_request_login(
     .unwrap();
 }
 
-fn create_favlist_model(data: Vec<fav::FavList>) -> ModelRc<FavListModel> {
+fn create_favlist_model(data: Vec<fav::FavObj>) -> ModelRc<FavListModel> {
     let base_model = Rc::new(VecModel::from(data));
 
     let mapped_model = base_model.map(|item| FavListModel {
@@ -225,4 +323,60 @@ fn create_favlist_model(data: Vec<fav::FavList>) -> ModelRc<FavListModel> {
     });
 
     ModelRc::new(mapped_model)
+}
+
+fn on_fav_entry_clicked(
+    ui_weak: slint::Weak<AppWindow>,
+    favid: String,
+    api: Arc<ApiClient>,
+) {
+    let mut has_more = true;
+    let mut media_list: Vec<fav::MediaObj> = vec![];
+    let mut pn = 1;
+    while has_more {
+        let resp = api.fav().media_list(favid.clone(), None, None, None, None, Some(pn), Some(36), None);
+        match resp {
+            Ok(r) => {
+                let medias = r.data.medias.clone();
+                if medias.len() > 0 {
+                    for v in medias {
+                        media_list.push(v);
+                    }
+                }
+                has_more = r.data.has_more;
+                if !has_more {break;}
+                pn += 1;
+            },
+            Err(e) => {
+                eprintln!("{:?}", e);
+                has_more = false;
+                break;
+            }
+        }
+    }
+    
+    let base_model = Rc::new(VecModel::from(media_list));
+
+    let mapped_model = base_model.map(|item| {
+        // let buffer = slint::SharedPixelBuffer::<slint::Rgb8Pixel>::new(200, 110);
+        MediaListModel {
+            bvid: SharedString::from(&item.bvid),
+            title: SharedString::from(&item.title),
+            duration: item.duration,
+            duration_mins: format!("{}:{:02}", (item.duration as f32 / 60f32).floor() as i32, item.duration % 60).into(),
+            cover: item.cover.into(),
+            uid: SharedString::from(&item.upper.mid.to_string()),
+            uname: SharedString::from(&item.upper.name),
+            cover_image: slint::Image::default(),
+        }
+    });
+
+    let m = ModelRc::new(mapped_model);
+
+    // resp.data.medias
+    if let Some(ui) = ui_weak.upgrade() {
+        ui.set_play_list(m);
+        ui.set_has_more(has_more);
+    }
+    
 }

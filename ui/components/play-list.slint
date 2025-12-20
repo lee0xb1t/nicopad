@@ -1,4 +1,5 @@
 import { VerticalBox, ListView } from "std-widgets.slint";
+import { MediaListModel } from "../types.slint";
 
 component PlayIcon inherits Path {
     viewbox-x: 0;
@@ -62,7 +63,19 @@ component DataContainer inherits VerticalBox {
 }
 
 component PlayEntry inherits Rectangle {
-    in-out property <int> index: 0;
+    pure callback load-image(string, image) -> image;
+
+    in property <int> index;
+    in-out property <string> bvid;
+    in-out property <string> title;
+    in-out property <string> cover;
+    in-out property <int> duration;
+    in-out property <string> duration_mins;
+    in-out property <string> uid;
+    in-out property <string> uname;
+
+    in-out property <image> cover-image;
+    
     in-out property <bool> is_choice: false;
     callback entry_click();
 
@@ -136,7 +149,15 @@ component PlayEntry inherits Rectangle {
                 Image {
                     width: 38px;
                     height: 38px;
-                    source: @image-url("../assets/audio_album.jpg");
+                    //source: @image-url("../assets/audio_album.jpg");
+                    source: cover-image;
+                }
+                
+                Image {
+                    visible: false;
+                    width: 38px;
+                    height: 38px;
+                    source: load-image(cover, cover-image);
                 }
             }
         }
@@ -147,6 +168,7 @@ component PlayEntry inherits Rectangle {
             Rectangle {
                 width: 420px;
                 height: 38px;
+                clip: true;
 
                 HorizontalLayout {
                     alignment: start;
@@ -158,7 +180,7 @@ component PlayEntry inherits Rectangle {
                             font-weight: 600;
                             font-size: 10.5pt;
                             letter-spacing: 0.4px;
-                            text: "Hachimi Music 01";
+                            text: title;
                         }
 
                         Text {
@@ -166,7 +188,7 @@ component PlayEntry inherits Rectangle {
                             font-weight: 600;
                             font-size: 9pt;
                             letter-spacing: 0.4px;
-                            text: "Chen";
+                            text: uname;
                         }
                     }
                 }
@@ -182,7 +204,7 @@ component PlayEntry inherits Rectangle {
                     font-weight: 500;
                     font-size: 10pt;
                     letter-spacing: 0.4px;
-                    text: "03:30";
+                    text: duration_mins;
                 }
             }
         }
@@ -213,6 +235,10 @@ component PlayEntry inherits Rectangle {
 
 
 export component PlayList inherits Rectangle {
+    pure callback load-image(string, image) -> image;
+
+    in-out property <[MediaListModel]> play-list;
+    callback play-entry-clicked(bvid: string, title: string, cover: string, duration: int, duration_mins: string);
     
     VerticalBox {
         width: parent.width;
@@ -221,7 +247,7 @@ export component PlayList inherits Rectangle {
         alignment: start;
         
         DataContainer {
-            in-out property <int> choice_idx: 0;
+            in-out property <string> choice_id;
 
             width: parent.width;
             height: parent.height;
@@ -230,14 +256,27 @@ export component PlayList inherits Rectangle {
                 height: 453px;
                 vertical-scrollbar-policy: always-off;
                 
-                for data in 20  : PlayEntry {
-                index: data;
-                is_choice: choice_idx == self.index;
-                entry_click => {
-                    choice_idx = self.index;
-                    debug(self.index);
+                for i in play-list.length  : PlayEntry {
+                    index: i;
+                    bvid: play-list[i].bvid;
+                    title: play-list[i].title;
+                    duration: play-list[i].duration;
+                    duration_mins: play-list[i].duration_mins;
+                    cover: play-list[i].cover;
+                    cover-image: play-list[i].cover-image;
+                    uid: play-list[i].uid;
+                    uname: play-list[i].uname;
+                    is_choice: choice_id == self.bvid;
+                    entry_click => {
+                        choice_id = self.bvid;
+                        debug(self.bvid);
+                        play-entry-clicked(self.bvid, self.title, self.cover, self.duration, self.duration_mins);
+                    }
+
+                    load-image(url, img) => {
+                        return load-image(url, img);
+                    }
                 }
-            }
             }
         }
 

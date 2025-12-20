@@ -471,6 +471,12 @@ export component PlayControls inherits Rectangle {
     in-out property <percent> progress: 0%;
     in-out property <percent> volumn: 50%;
 
+    in-out property <string> play-bvid;
+    in-out property <string> play-title;
+    in-out property <string> play-cover;
+    in-out property <string> play-duration;
+    in-out property <string> play-duration-mins;
+
     
     callback progress-change(float);
     callback volumn-change(float);

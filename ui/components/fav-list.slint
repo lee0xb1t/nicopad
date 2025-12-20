@@ -124,6 +124,7 @@ component FavEntry inherits Rectangle {
 
 export component FavList inherits Rectangle {
     in-out property <[FavListModel]> fav-list;
+    callback fav-entry-clicked(favid: string);
     
     VerticalBox {
         width: parent.width;
@@ -172,6 +173,7 @@ export component FavList inherits Rectangle {
                     entry_click => {
                         choice_id = self.id;
                         debug(self.id);
+                        fav-entry-clicked(self.id);
                     }
                 }
             }

@@ -5,7 +5,7 @@ import { User } from "components/user.slint";
 import { Title } from "components/title.slint";
 import { PlayList } from "components/play-list.slint";
 import { PlayControls } from "components/play-controls.slint";
-import { FavListModel } from "types.slint";
+import { FavListModel, MediaListModel } from "types.slint";
 
 export global MathHelper  {
     pure callback to_percent(float) -> percent;
@@ -24,6 +24,8 @@ export component AppWindow inherits Window {
     callback minium-clicked();
     callback close-clicked();
 
+    pure callback load-image(string, image) -> image;
+
     // user
     in-out property <bool> is-login: false;
     in-out property <image> qrcode;
@@ -39,6 +41,19 @@ export component AppWindow inherits Window {
 
     // fav
     in-out property <[FavListModel]> fav-list;
+    callback fav-entry-clicked(favid: string);
+    
+    // play
+    in-out property <[MediaListModel]> play-list;
+    in-out property <bool> has-more: false;
+    callback play-entry-clicked(bvid: string, title: string, cover: string, duration: int, duration_mins: string);
+
+    // play controls
+    in-out property <string> play-bvid;
+    in-out property <string> play-title;
+    in-out property <string> play-cover;
+    in-out property <string> play-duration;
+    in-out property <string> play-duration-mins;
     
 
     function process_move_event(i: int, ev: PointerEvent, is_pressed: bool, x: length, y: length) {
@@ -157,10 +172,14 @@ export component AppWindow inherits Window {
                         height: 365px;
 
                         FavList {
-                            fav-list: fav-list;
-                            
                             width: parent.width;
                             height: parent.height;
+
+
+                            fav-list: fav-list;
+                            fav-entry-clicked(favid) => {
+                                fav-entry-clicked(favid);
+                            }
                         }
                     }
 
@@ -251,7 +270,16 @@ export component AppWindow inherits Window {
                         width: 599px;
                         background: white;
                     
-                        PlayList {}
+                        PlayList {
+                            load-image(url, img) => {
+                                return load-image(url, img);
+                            }
+
+                            play-list: play-list;
+                            play-entry-clicked(bvid, title, cover, duration, duration_mins) => {
+                                play-entry-clicked(bvid, title, cover, duration, duration_mins);
+                            }
+                        }
                     }
                 }
             }
