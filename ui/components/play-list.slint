@@ -238,7 +238,7 @@ export component PlayList inherits Rectangle {
     pure callback load-image(string, image) -> image;
 
     in-out property <[MediaListModel]> play-list;
-    callback play-entry-clicked(bvid: string, title: string, cover: string, duration: int, duration_mins: string);
+    callback play-entry-clicked(bvid: string, title: string, cover: string, duration: int, duration_mins: string, uname: string);
     
     VerticalBox {
         width: parent.width;
@@ -270,7 +270,7 @@ export component PlayList inherits Rectangle {
                     entry_click => {
                         choice_id = self.bvid;
                         debug(self.bvid);
-                        play-entry-clicked(self.bvid, self.title, self.cover, self.duration, self.duration_mins);
+                        play-entry-clicked(self.bvid, self.title, self.cover, self.duration, self.duration_mins, self.uname);
                     }
 
                     load-image(url, img) => {

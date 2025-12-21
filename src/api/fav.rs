@@ -90,7 +90,10 @@ impl FavApi {
         }
         if let Some(v) = web_location {
             url.push_str(&format!("&web_location={}", v));
+        } else {
+            url.push_str("&web_location=333.1387");
         }
+        
         let resp = self.client.get(url).send()?;
         let resp = resp.json::<FavResp>()?;
         Ok(resp)

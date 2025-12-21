@@ -54,6 +54,7 @@ export component AppWindow inherits Window {
     in-out property <string> play-cover;
     in-out property <string> play-duration;
     in-out property <string> play-duration-mins;
+    in-out property <string> play-uname;
     
 
     function process_move_event(i: int, ev: PointerEvent, is_pressed: bool, x: length, y: length) {
@@ -276,7 +277,13 @@ export component AppWindow inherits Window {
                             }
 
                             play-list: play-list;
-                            play-entry-clicked(bvid, title, cover, duration, duration_mins) => {
+                            play-entry-clicked(bvid, title, cover, duration, duration_mins, uname) => {
+                                play-bvid = bvid;
+                                play-title = title;
+                                play-cover = cover;
+                                play-duration = duration;
+                                play-duration_mins = duration_mins;
+                                play-uname = uname;
                                 play-entry-clicked(bvid, title, cover, duration, duration_mins);
                             }
                         }
@@ -299,6 +306,13 @@ export component AppWindow inherits Window {
                 background: white;
                 
                 PlayControls {
+                    play-bvid: play-bvid;
+                    play-title: play-title;
+                    play-cover: play-cover;
+                    play-duration: play-duration;
+                    play-duration-mins: play-duration-mins;
+                    play-uname: play-uname;
+
                     to_percent(f) => {
                         MathHelper.to_percent(f);
                     }

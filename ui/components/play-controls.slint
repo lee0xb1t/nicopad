@@ -476,6 +476,7 @@ export component PlayControls inherits Rectangle {
     in-out property <string> play-cover;
     in-out property <string> play-duration;
     in-out property <string> play-duration-mins;
+    in-out property <string> play-uname;
 
     
     callback progress-change(float);
@@ -509,7 +510,7 @@ export component PlayControls inherits Rectangle {
                 Image {
                     width: 38px;
                     height: 38px;
-                    source: @image-url("../assets/audio_album.jpg");
+                    // source: @image-url("../assets/audio_album.jpg");
                 }
             }
         }
@@ -527,11 +528,12 @@ export component PlayControls inherits Rectangle {
                     VerticalLayout {
                         alignment: space-evenly;
                         audio_text := Text {
+                            width: 200px;
                             color: #27272a;
                             font-weight: 600;
                             font-size: 9pt;
                             letter-spacing: 0.4px;
-                            text: "Hachimi Music 01";
+                            text: play-title;
                         }
 
                         Text {
@@ -539,7 +541,7 @@ export component PlayControls inherits Rectangle {
                             font-weight: 600;
                             font-size: 9pt;
                             letter-spacing: 0.4px;
-                            text: "Chen";
+                            text: play-uname;
                         }
                     }
                 }

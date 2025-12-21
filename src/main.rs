@@ -16,7 +16,7 @@ use image::{EncodableLayout, Rgb};
 use qrcode::QrCode;
 use slint::{LogicalPosition, SharedString, VecModel, ModelRc};
 
-use nicopad::api::{self, ApiClient, fav};
+use nicopad::api::{self, ApiClient, fav, video};
 
 slint::include_modules!();
 
@@ -183,18 +183,25 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     // play list
-    // ui.on_play_entry_clicked({
-    //     let h = ui.as_weak();
-    //     let api = Arc::clone(&api);
+    ui.on_play_entry_clicked({
+        let h = ui.as_weak();
+        let api = Arc::clone(&api);
 
-    //     move |bvid, title, cover, duration, duration_mins: | {
-    //         let ui = h.unwrap();
+        move |bvid, title, cover, duration, duration_mins | {
+            let ui = h.unwrap();
 
-    //         let h = ui.as_weak();
-    //         let api = Arc::clone(&api);
+            let h = ui.as_weak();
+            let api = Arc::clone(&api);
             
-    //     }
-    // });
+            let avid = video::bvid2avid(bvid.into()).unwrap();
+            println!("avid: {avid}");
+
+            // TODO get video url and anti spider
+
+            // let s = api.video().playurl(bvid.to_string(), None, None);
+            // println!("playurl: {}", s.unwrap());
+        }
+    });
 
 
     ui.run()?;
@@ -265,7 +272,7 @@ fn on_request_login(
                                 apps.vip_type = info.data.vip.vip_type;
                                 apps.status = info.data.vip.status;
 
-                                let face_image = api::load_image(info.data.face.clone()).unwrap();
+                                let face_image = api.load_image(info.data.face.clone()).unwrap();
                                 let face_image = image::load_from_memory(&face_image).unwrap();
                                 let face_image = slint::SharedPixelBuffer::clone_from_slice(
                                     face_image.as_bytes(),
