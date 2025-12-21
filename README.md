@@ -1,6 +1,6 @@
 # nicopad
 
-A audio player
+A bilibili audio player
 
 ## If the font is not applying anti-aliasing, try running the following command and then retry.
 
