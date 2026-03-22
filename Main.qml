@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import "components"
 
 Window {
@@ -35,6 +36,11 @@ Window {
                     }
 
                     User {
+                        onUserClicked: function(isLogin, uid) {
+                            if (!isLogin) {
+                                dialog.open()
+                            }
+                        }
                     }
                 }
             }
@@ -59,6 +65,22 @@ Window {
                     height: 470
                 }
             }
+        }
+    }
+
+    Dialog {
+        id: dialog
+        anchors.centerIn: parent
+        title: "扫描二维码"
+        modal: true
+
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        onAccepted: console.log("Ok clicked")
+        onRejected: console.log("Cancel clicked")
+
+        Image {
+
         }
     }
 }
