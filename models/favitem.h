@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 
-class FavItemModel : public QObject
+class FavItem : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString favId READ favId WRITE setFavId NOTIFY favIdChanged)
@@ -13,7 +13,7 @@ class FavItemModel : public QObject
     Q_PROPERTY(QString cover READ cover WRITE setCover NOTIFY coverChanged)
     Q_PROPERTY(qint64 ctime READ ctime WRITE setCtime NOTIFY ctimeChanged)
 public:
-    explicit FavItemModel(QObject *parent = nullptr);
+    explicit FavItem(QObject *parent = nullptr);
 
     QString favId() const;
     void setFavId(const QString &newFavId);

@@ -3,6 +3,7 @@ import QtQuick.Layouts
 
 Item {
     property string currentVid
+    property var videoListModel
 
     id: rootId
 
@@ -30,19 +31,18 @@ Item {
                 // ColumnLayout {
                 //     width: parent.width
                 //     spacing: 4
-
-
                 // }
+
                 ListView {
                     anchors.fill: parent
                     spacing: 4
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds
 
-                    model: mmodel
+                    model: videoListModel
                     delegate: VItem {
                         id: vitemId
-                        width: parent.width
+                        width: listContainerId.width
                         height: 66
                         antialiasing: true
 
@@ -61,53 +61,37 @@ Item {
     ListModel {
         id: mmodel
         ListElement {
-            vid: "a"
-            title: "AA"
-            second: 12
-            thumburl: ""
-            author: "L"
+            mediaId: "a"
+            type: 1
+            cover: "https://i0.hdslb.com/bfs/archive/53626a003127a20c68b73f89cb431891b046ba72.jpg"
+            duration: 1
+            attr: 1
+            bvid: "BV19z421q7cH"
+            upId: "a"
+            upName: "a"
+            title: "【4K60帧/Hires无损音质】魔法少女与恶曾是敌人 OP 完整版 「未完成ランデヴー」 Lezel【Full ver./中文字幕】"
         }
         ListElement {
-            vid: "b"
-            title: "AA"
-            second: 12
-            thumburl: ""
-            author: "L"
+            mediaId: "a"
+            type: 1
+            cover: "https://i1.hdslb.com/bfs/archive/c7a9bae86be26c0a707843f1073ca3327bf2331f.jpg"
+            duration: 1
+            attr: 1
+            bvid: "BV1BdiMBCEke"
+            upId: "a"
+            upName: "a"
+            title: "“再听这首歌，已物是人非。”—《The Way I Still Love You》"
         }
         ListElement {
-            vid: "c"
-            title: "AA"
-            second: 12
-            thumburl: ""
-            author: "L"
-        }
-        ListElement {
-            vid: "d"
-            title: "AA"
-            second: 12
-            thumburl: ""
-            author: "L"
-        }
-        ListElement {
-            vid: "e"
-            title: "AA"
-            second: 12
-            thumburl: ""
-            author: "L"
-        }
-        ListElement {
-            vid: "f"
-            title: "AA"
-            second: 12
-            thumburl: ""
-            author: "L"
-        }
-        ListElement {
-            vid: "g"
-            title: "AA"
-            second: 12
-            thumburl: ""
-            author: "L"
+            mediaId: "a"
+            type: 1
+            cover: "https://i1.hdslb.com/bfs/archive/c7a9bae86be26c0a707843f1073ca3327bf2331f.jpg"
+            duration: 1
+            attr: 1
+            bvid: "a"
+            upId: "a"
+            upName: "a"
+            title: "【4K60帧/Hires无损音质】魔法少女与恶曾是敌人 OP 完整版 「未完成ランデヴー」 Lezel【Full ver./中文字幕】"
         }
     }
 }

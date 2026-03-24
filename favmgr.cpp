@@ -88,7 +88,7 @@ void FavManager::onFavListReceived(const QJsonObject& jsonObj) {
         QJsonValue data = listArr[i];
         QJsonObject dataObj = data.toObject();
 
-        FavItemModel *itemModel = new FavItemModel;
+        FavItem *itemModel = new FavItem;
         itemModel->setFavId(QString::number(dataObj["id"].toInteger()));
         itemModel->setUid(QString::number(dataObj["mid"].toInteger()));
         itemModel->setTitle(dataObj["title"].toString());
@@ -101,7 +101,7 @@ void FavManager::onFavListReceived(const QJsonObject& jsonObj) {
     emit favListLoaded();
 }
 
-QList<FavItemModel *> FavManager::items() const
+QList<FavItem *> FavManager::items() const
 {
     return m_items;
 }
@@ -111,7 +111,7 @@ qsizetype FavManager::count() const
     return m_count;
 }
 
-void FavManager::addItems(FavItemModel *itemModel) {
+void FavManager::addItems(FavItem *itemModel) {
     itemModel->setParent(this);
     m_items.append(itemModel);
     m_count = m_items.count();

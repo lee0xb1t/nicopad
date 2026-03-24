@@ -3,12 +3,12 @@
 
 #include <QObject>
 #include <QtNetwork>
-#include "models/favitemmodel.h"
+#include "models/favitem.h"
 
 class FavManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QList<FavItemModel*> items READ items NOTIFY itemsChanged)
+    Q_PROPERTY(QList<FavItem*> items READ items NOTIFY itemsChanged)
     Q_PROPERTY(qsizetype count READ count NOTIFY countChanged)
 public:
     enum RequestType {
@@ -20,7 +20,7 @@ public:
 
     Q_INVOKABLE void fetchFavList(QString uid);
 
-    QList<FavItemModel *> items() const;
+    QList<FavItem *> items() const;
 
     qsizetype count() const;
 
@@ -38,10 +38,10 @@ signals:
 private:
     void onFavListReceived(const QJsonObject& jsonObj);
 
-    void addItems(FavItemModel *itemModel);
+    void addItems(FavItem *itemModel);
 
     QNetworkAccessManager *m_nam;
-    QList<FavItemModel *> m_items;
+    QList<FavItem *> m_items;
     qsizetype m_count;
 };
 

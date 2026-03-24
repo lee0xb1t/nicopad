@@ -34,6 +34,12 @@ Window {
 
                     Fav {
                         favList: favMgr.items
+
+                        onFavClicked: function(favid) {
+                            console.log("onFavClicked:", favid)
+                            videoListModelId.favId = favid
+                            // videoListModelId.fetchVideoList()
+                        }
                     }
 
                     User {
@@ -73,6 +79,7 @@ Window {
                 VList {
                     width: parent.width
                     height: 470
+                    videoListModel: videoListModelId
                 }
             }
         }
@@ -139,6 +146,15 @@ Window {
         }
         function onFavMgrError(msg) {
             console.log("onFavMgrError:", msg)
+        }
+    }
+
+    VideoListModel {
+        id: videoListModelId
+        favId: ""
+
+        onFavListLoaded: function() {
+            console.log("onFavListLoaded:", videoListModelId.favId)
         }
     }
 }

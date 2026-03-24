@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
 Item {
     id: rootId
@@ -7,8 +8,15 @@ Item {
     required property string currentVid
 
     required property int index
-    required property string vid
+    required property string mediaId
+    required property int type
     required property string title
+    required property string cover
+    required property int duration
+    required property int attr
+    required property string bvid
+    required property string upId
+    required property string upName
 
     signal choiceVid(string vid)
 
@@ -19,8 +27,8 @@ Item {
         id: containerParentRectId
         anchors.fill: parent
         radius: 8
-        color: currentVid === vid ? "#f4f4f5" : (videoItemMAId.containsMouse ? "#fafafa" : "transparent")
-        border.color: currentVid === vid ? "#e4e4e7" : (videoItemMAId.containsMouse ? "#f4f4f5" : "transparent")
+        color: currentVid === bvid ? "#f4f4f5" : (videoItemMAId.containsMouse ? "#fafafa" : "transparent")
+        border.color: currentVid === bvid ? "#e4e4e7" : (videoItemMAId.containsMouse ? "#f4f4f5" : "transparent")
         border.width: 1
 
         Rectangle {
@@ -33,7 +41,7 @@ Item {
             RowLayout {
                 width: parent.width
                 height: parent.height
-                spacing: 25
+                spacing: 20
 
                 Rectangle {
                     width: 20
@@ -50,16 +58,32 @@ Item {
                 }
 
                 Rectangle {
-                    width: 40
-                    height: 40
+                    width: 45
+                    height: 45
                     // anchors.verticalCenter: parent.verticalCenter
                     color: "transparent"
 
                     Image {
+                        id: imgId
                         anchors.fill: parent
-                        source: "https://picsum.photos/seed/m83/300/300"
+                        source: rootId.cover
                         smooth: true
                         mipmap: true
+                        fillMode: Image.PreserveAspectCrop
+
+                        layer.enabled: true
+                        layer.effect: OpacityMask {
+                            maskSource: Item {
+                                width:  imgId.width
+                                height: imgId.height
+                                Rectangle {
+                                    anchors.centerIn: parent
+                                    width: imgId.width
+                                    height: imgId.height
+                                    radius: 10
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -70,7 +94,10 @@ Item {
                     color: "transparent"
 
                     Text {
-                        anchors.centerIn: parent
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        clip: true
+                        width: parent.width
                         text: rootId.title
                     }
                 }
@@ -94,7 +121,7 @@ Item {
                 hoverEnabled: true
                 cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
                 onClicked: {
-                    choiceVid(rootId.vid)
+                    choiceVid(rootId.bvid)
                 }
             }
         }

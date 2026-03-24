@@ -4,6 +4,7 @@ import QtQuick.Shapes
 
 Item {
     property var favList
+    signal favClicked(string favid)
 
     property string commandPath: "M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"
 
@@ -107,6 +108,7 @@ Item {
 
                         onFavChoice: function(id) {
                             console.log("In fav.qml:", id)
+                            favClicked(id)
                         }
                     }
                 }
